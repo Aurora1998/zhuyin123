@@ -1,0 +1,46 @@
+.icon {
+	font-size: 20px;
+	margin-right: 30px;
+}
+
+.search {
+	height: 45px;
+	width: 60%;
+	padding-left: 30px;
+	border: 0;
+	font-size: 18px;
+}
+
+.search:focus{
+	border: 0;
+	outline: none;
+}
+
+/*.glyphicon {
+	line-height: 45px;
+}*/
+
+:-moz-placeholder {
+	font-size: 18px;
+	color: gray;
+}
+
+::-moz-placeholder {
+	font-size: 18px;
+	color: gray;
+}
+
+input:-ms-input-placeholder {
+	font-size: 18px;
+	color: gray;
+}
+
+input::-webkit-input-placeholder {
+	font-size: 18px;
+	color: gray;
+}
+
+.list-group-item {
+	height: 50px;
+	padding: 12px 20px;
+}

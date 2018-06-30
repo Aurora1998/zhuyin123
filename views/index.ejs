@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>To-Do-List</title>
+		<link href="css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet" />
+		<script src="js/jquery-1.11.3.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/index.css" />
+		<script src="/js/check_sub.js"></script>
+		<script type="text/javascript" src="js/scrollReveal.js"></script>
+		<style>
+			.cbp_tmtimeline>li .cbp_tmlabel {
+				margin: 0 30px 15px 180px;
+				background: #3594cb;
+				color: #fff;
+				padding: 2em;
+				position: relative;
+				border-radius: 5px;
+				height: 219px;
+			}
+			
+			body {
+				background: url(../images/top.jpg) no-repeat center top #075498;
+			}
+			
+			.blogpic {
+				height: 130px;
+				width: 200px;
+			}
+			
+			.wenzi {
+				float: left;
+				font-size: 18px;
+				margin-bottom: 15px;
+			}
+			
+			.form-control {
+				width: 60%;
+				float: left;
+			}
+			
+			.clear {
+				clear: both;
+			}
+			
+			.small {
+				width: 16%;
+				margin-right: 6%;
+			}
+			
+			a.readmore {
+				position: relative;
+				margin-top: 85px;
+			}
+			
+			.mybtn {
+				float: right;
+				margin-top: -30px;
+				width: 90px;
+				height: 30px;
+				background: rgb(0, 77, 156);
+				border-radius: 5px;
+				border: none;
+			}
+			
+			.unable {
+				background: rgb(244, 244, 244);
+			}
+			
+			a.list-group-item:hover {
+				background: orange;
+			}
+			
+			.readmore:hover {
+				text-decoration: none;
+			}
+			
+			.left {
+				color: white;
+				font-size: larger;
+				width: 20%;
+				float: left;
+			}
+			
+			.right {
+				width: 80%;
+				float: left;
+				margin-bottom: 10px;
+			}
+		</style>
+		<script>
+			function my_show() {
+				$("#back").css("display", "block");
+				$("#newList").slideDown(300);
+			}
+
+			function my_hide() {
+				$("#back").css("display", "none");
+				$("#newList").slideUp(300);
+			}
+			$().ready(function() {
+				$("#add").click(function() {
+					my_show();
+				});
+				$("#over").click(function() {
+					my_hide();
+				});
+				$("#back").click(function() {
+					my_hide();
+				});
+			});
+		</script>
+	</head>
+
+	<body>
+		<div id="back" style="display: none; position:absolute; width:100%; height: 100%; top: 0; left: 0; z-index: 500; background: rgba(0, 78, 157, .6);" disabled="disabled">
+		</div>
+		<div class="container-fluid" style="height: 800px;padding-top: 10px;">
+			<!--导航栏开始-->
+			<div class="col-md-3" style="background: white;height: 100%;padding-top: 10px;border-radius: 5px;">
+				<div class="list-group">
+					<div class="list-group-item" style="height: 66px; padding: 10px 15px;border: 1px solid gray;">
+						<form method="post" action="/search">
+							<img src="images/head.png" width="55px" height="55px" />
+							<input class="search" type="text" name="title" placeholder="请输入待办清单" />
+							<div style="text-align: center;background: red; float: right; width: 15%;height: 45px;border-left: 1px solid gray;">
+								<button type="submit" style="width: 100%; height: 100%;background: white; border: none;">
+									<span class="glyphicon glyphicon-search icon" style="color: gray; line-height: 45px;font-size: 25px;"></span>
+								</button>
+							</div>
+						</form>
+					</div>
+					<%
+						var date = new Date();
+						var year = date.getFullYear();
+						var month = date.getMonth()+1;
+						var day = date.getDate();
+						if(month < 10)month = "0"+month;
+						if(day < 10)day = "0"+day;
+						var days = [31,28,31,30,31,30,31,31,30,31,30,31];
+						if((year%4==0 && year%100!=0)|| year%400==0)days[1]++;
+					%>
+					<%for(var i=0;i<left.length;i++){ %>
+					<a href="/index?list=<%=left[i].id %>" class="list-group-item <%if(i < 3){ %>unable<%} %> <%if(i == (list_flag-1)){ %>active<%} %>">
+						<%if(i == 0){ %>
+						<span class="glyphicon glyphicon-home icon" aria-hidden="true"></span>
+						<%}else if(i == 1){ %>
+						<span class="glyphicon glyphicon-hourglass icon" aria-hidden="true"></span>
+						<%}else if(i == 2){ %>
+						<span class="glyphicon glyphicon-trash icon" aria-hidden="true"></span>
+						<%}else{ %>
+						<span class="glyphicon glyphicon-th-list icon" aria-hidden="true"></span>
+						<%} %>
+						<%if(left[i].number != 0){ %>
+						<span class="badge" style="background: red;"><%=left[i].number %></span>
+						<%} %>
+						<%=left[i].title %>
+					</a>
+					<%} %>
+					<a href="#" id="add" class="list-group-item unable">
+						<span class="glyphicon glyphicon-plus icon" aria-hidden="true"></span> 新建清单
+					</a>
+				</div>
+			</div>
+			<!--导航栏结束-->
+
+			<div id="newList" style="padding-top: 70px; padding-left: 60px; display: none; width: 560px; height: 200px; background: white; position: absolute; top: 220px; left: 450px; z-index: 1000; border-radius: 5px;">
+				<form method="post" action="/addList">
+					<input type="text" style="margin-right: 20px;" name="listName" class="form-control" placeholder="请输入新建的列表名">
+					<button type="submit" style="color: white; background: dodgerblue; border: none; border-radius: 5px; width: 60px; height: 33px;">确&nbsp;&nbsp;定</button>
+				</form>
+			</div>
+
+			<!--正文开始-->
+			<div class="col-md-9" style="height: 100%;">
+				<div style="height: 100%; overflow: auto;">
+					<ul class="cbp_tmtimeline">
+						<%if(list_flag != "3"){ %>
+						<li>
+							<time class="cbp_tmtime">
+									<span><%=month %>-<%=day %></span>
+									<span><%=year %></span>
+							</time>
+							<div class="cbp_tmicon"></div>
+							<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
+								<span id="tips" style="float: right; color: orange;"></span>
+								<form action="/addThing?list=<%=list_flag %>" method="post" onsubmit="return check()">
+									<span class="wenzi">标题：</span>
+									<input type="text" class="form-control" name="title" id="title" placeholder="" />
+									<div class="clear"></div>
+
+									<span class="wenzi">备注：</span>
+									<input type="text" class="form-control" name="message" id="message" placeholder="" />
+									<div class="clear"></div>
+
+									<span class="wenzi">时间：</span>
+									<select class="small form-control" name="year">
+										<%for(var i=0;i<5;i++){ %>
+											<option value="<%=year+i %>"> <%=year+i %> </option>
+										<%} %>
+									</select>
+									
+									<select class="small form-control" name="month" >
+										<%for(var i=parseInt(month);i<=12;i++){
+											if(i<10)i="0"+i;
+										 %>
+											<option value="<%=i %>"> <%=i %> </option>
+										<%} %>
+									</select>
+									
+									<select class="small form-control" name="day">
+										<%for(var i=parseInt(day);i<=days[month-1];i++){ 
+											if(i<10)i="0"+i;	
+										%>
+											<option value="<%=i %>"> <%=i %> </option>
+										<%} %>
+									</select>
+									<!--<input type="text" class="form-control small" name="year" id="year" placeholder="" />
+									<input type="text" class="form-control small" name="month" id="month" placeholder="" />
+									<input type="text" class="form-control small" name="day" id="day" placeholder="" />-->
+									<div class="clear"></div>
+
+									<span class="wenzi">紧急程度：</span>
+									<label class="radio-inline">
+  										<input type="radio" name="urgent" id="inlineRadio1" value="1" checked="checked"> 一般
+									</label>
+									<label class="radio-inline">
+									 	<input type="radio" name="urgent" id="inlineRadio2" value="2"> 重要
+									</label>
+									<label class="radio-inline">
+									  <input type="radio" name="urgent" id="inlineRadio3" value="3"> 很重要
+									</label>
+									<div class="clear"></div>
+									<input type="submit" class="mybtn" value="提  交"></input>
+									<input type="reset" class="mybtn" value="重  置" style="margin-top: -75px;background: orange;"></input>
+									<div class="clear"></div>
+								</form>
+							</div>
+						</li>
+						<%} for(var i=0;i<right.length;i++){let time = right[i].time;	let begin = time.indexOf("-");let down = time.substring(0,begin);let cha="-";
+							let num=1;
+							var two=find(time,cha,num);
+							function find(str,cha,num){
+								var x=time.indexOf(cha);
+                                for(var i=0;i<num;i++){
+                                    x=time.indexOf(cha,x+1);
+                                }
+                                return x;
+							}
+                            let up_month = time.substring(begin+1,two);
+							let down_day = time.substring(two+1);%>
+						<li>
+							<time class="cbp_tmtime">
+									<span><%= up_month %>-<%=down_day %></span> -->
+									<span><%=down %></span>
+							</time>
+							<div class="cbp_tmicon"></div>
+							<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
+								<%
+									var color = "greenyellow";
+									var urg = "一般";
+									if(right[i].urgent == "2"){
+										color = "orange";
+										urg = "重要";
+									}
+									else if(right[i].urgent == "3") {
+										color = "red";
+										urg = "很重要";
+									}
+								%>
+								<div style="width: 15px; height: 15px; background: <%=color %>; border-radius: 100%; float: left;"></div>
+								<h2 style="float: left; margin-left: 15px;"><%=right[i].title %></h2>
+								<%if(list_flag == "3"){ %>
+								<div style="float: right; font-size: 20px; color: greenyellow;">
+									已完成&nbsp;&nbsp;
+									<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+								</div>
+								<%}else{ %>
+								<div style="float: right; font-size: 20px; color: orange; ">
+									正在进行&nbsp;&nbsp;
+									<span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+								</div>
+								<%} %>
+								<div class="clear"></div>
+								<p>
+									<div style="width: 400px; float: left; overflow: auto;">
+										<div class="left">【急 缓】</div>
+										<div class="right" style="color: <%=color %>">
+											<%= urg%> 
+										</div>
+										
+										<div class="clear"></div>
+										
+										<div class="left">【备 注】</div>
+										<div class="right">
+											<%=right[i].message %> 
+										</div>
+									</div>
+								</p>
+								<%if(list_flag != "3"){ %>
+								<a href="/deleteThing?id=<%=right[i].id %>&list=<%=list_flag %>" class="readmore">已经完成&gt;&gt;</a>
+								<a href="/" class="readmore" style="margin-top: 40px; margin-right: -92px;">点击修改&gt;&gt;</a>
+								<%}else{ %>
+								<a href="/removeThing?id=<%=right[i].id %>&list=<%=list_flag %>" class="readmore">彻底删除&gt;&gt;</a>
+								<%} %>
+							</div>
+						</li>
+						<%} %>
+
+						<%if(right.length == 0 && list_flag == 3){ %>
+						<li>
+							<time class="cbp_tmtime">
+									<span><%=month %>-<%=day %></span>
+									<span><%=year %></span>
+							</time>
+							<div class="cbp_tmicon"></div>
+							<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
+								<h2 style="float: left; margin-left: 15px;">空荡荡的废纸篓</h2>
+								<div class="clear"></div>
+								<p>
+									<span class="blogpic" style="float: left;">
+											<img src="/system/shock.png" width="150px" height="150px">
+									</span>
+									<div style="width: 400px; float: left; overflow: auto;">
+										哇，您今天还没有已完成的任务。。。<br /><br /> 快去做点任务来充实一下自己吧，嘻嘻嘻
+									</div>
+								</p>
+							</div>
+						</li>
+						<%} %>
+
+						<%if(right.length == 0 && list_flag != 3){ %>
+						<li>
+							<time class="cbp_tmtime">
+								<span><%=month %>-<%=day %></span>
+									<span><%=year %></span>	
+							</time>
+							<div class="cbp_tmicon"></div>
+							<div class="cbp_tmlabel" data-scroll-reveal="enter right over 1s">
+								<h2 style="float: left; margin-left: 15px;">暂无计划列表</h2>
+								<div class="clear"></div>
+								<p>
+									<span class="blogpic" style="float: left;">
+											<img src="/system/smile.png" style="width: 150px; height: 150px;" >
+									</span>
+									<div style="width: 400px; float: left; overflow: auto;">
+										您今天还没有制定计划列表呢。。。<br /><br /> 快去制定一点计划来使一天更加条理吧，嘻嘻嘻
+									</div>
+								</p>
+							</div>
+						</li>
+						<%} %>
+					</ul>
+				</div>
+			</div>
+			<!--正文结束-->
+		</div>
+	</body>
+
+</html>
